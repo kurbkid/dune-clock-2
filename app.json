@@ -4,7 +4,7 @@
     "slug": "dune-clock-2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/klok.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
