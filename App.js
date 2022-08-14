@@ -39,7 +39,9 @@ const App = () => {
           style={{flex:1,backgroundColor:playerColors[i]}}
           onValueChange={(itemValue,itemIndex) => { 
             let c = playerColors.slice()
-            c[i] = itemValue
+            j = c.findIndex( (x) => x==itemValue ) //where was the picked color before
+            c[j] = c[i] // old color goes to that place
+            c[i] = itemValue //new color goes here
             setPlayerColors(c)
           }}
           >
