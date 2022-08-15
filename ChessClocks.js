@@ -17,7 +17,7 @@ const renderTime = (time) => {
   s = getSeconds(time);
   return(
     <View style={styles.timebox}>
-      <Text style={{fontSize:40 ,fontWeight:'800'}}>
+      <Text style={styles.timeText}>
         {m<10 ? '0'+m : m}:{s<10 ? '0'+s : s}
       </Text>
     </View>
@@ -27,7 +27,6 @@ const renderTime = (time) => {
 // the main component
 // props: numberOfPlayers, duration, colors
 const ChessClocks = (props) => {
-  console.log(props)
     let n = props.numberOfPlayers
     const [Pause,setPause] = useState(true)
     const [aanDeBeurt,setAanDeBeurt] = useState(0)
@@ -89,10 +88,20 @@ const clockStyleRotation = (player) => {
 const styles = StyleSheet.create({
     timebox: {
       flex: 1,
-      padding: 0,
+      padding: 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
+    timeText:{
+      fontSize:40 ,
+      fontWeight:'800',
+      backgroundColor:'#AAAAAA60',
+      alignSelf:'auto',
+      borderRadius:10,
+      // textShadowColor:"#9B6F34",
+      // textShadowOffset:{width:-3,height:-3},
+      // textShadowRadius:1,
+    }
 })
   
 

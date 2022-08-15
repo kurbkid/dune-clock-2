@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
 import { 
   StyleSheet, 
   Text, 
   View,
-  Button
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 
@@ -12,10 +10,10 @@ import {Picker} from '@react-native-picker/picker';
 const colors = ['#89292A','#9B6F34','#1E3560','#186047']
 const colornames = ['red','yellow','blue','green']
 
-const ConfigScreen = ({navigation}) => {
-  const [numberOfPlayers,setNumberOfPlayers] = useState(4);
-  const [timerDuration, setTimerDuration] = useState(25*60);
-  const [playerColors, setPlayerColors] = useState(colors);
+const Config = (props) => {
+  numberOfPlayers=props.configuration.numberOfPlayers
+  timerDuration=props.configuration.timerDuration
+  playerColors=props.configuration.playerColors
 
   //fill arrays with items for the Pickers
   const timeItems = []
@@ -28,16 +26,16 @@ const ConfigScreen = ({navigation}) => {
   //Color picker for certain player
   const PlayerColorPicker = (i) => {
     return(
-      <View key={i} style={{flex:1,flexDirection:'row'}}>
+      <View key={i} style={{borderWidth:3,borderColor:'grey',borderRadius:4}}>
         <Picker
           selectedValue={playerColors[i]}
-          style={{flex:1,backgroundColor:playerColors[i]}}
+          style={{width:70,height:70,backgroundColor:playerColors[i]}}
           onValueChange={(itemValue,itemIndex) => { 
             let c = playerColors.slice()
             j = c.findIndex( (x) => x==itemValue ) //where was the picked color before
             c[j] = c[i] // old color goes to that place
             c[i] = itemValue //new color goes here
-            setPlayerColors(c)
+            props.onChange({...props.configuration,playerColors:c})
           }}
           >
           {colorItems}
@@ -51,58 +49,55 @@ const ConfigScreen = ({navigation}) => {
     PlayerColorPickerArray.push(PlayerColorPicker(i))
   }
 
+  //The return has a shitload of Views in order to make for a nice options table
   return(
-    <View style={[styles.container, {justifyContent:'flex-end',marginTop:30}]}>
-      {/* Display the number of players and time per player Pickers */}
-      <View style={[styles.container, {flexDirection: "row"}]}>
+    <View style={{justifyContent:'flex-start'}}>
+      <View style={{flexDirection:'row',}}>
+        <Text style={styles.configText}>Number of players:</Text>
         <Picker 
           selectedValue={numberOfPlayers}
           style={{flex:1,color:colors[1]}}
           dropdownIconColor={colors[1]}
           onValueChange={(itemValue, itemIndex) => {
-            setNumberOfPlayers(itemValue);
+            props.onChange({...props.configuration,numberOfPlayers:itemValue})
           }}
         >
           {numberOfPlayersItems}
         </Picker>
-          <Text style={[styles.normal, {flex:1}]}>players</Text>
-          <Picker
-            selectedValue={timerDuration}
-            style={{flex:1,color:colors[1]}}
-            dropdownIconColor={colors[1]}
-            onValueChange={(itemValue, itemIndex) => {
-              setTimerDuration(itemValue)
-            }}
-            >
-            {timeItems}
-          </Picker>
-          <Text style={[styles.normal, {flex:1}]}>minutes</Text>
-      </View>    
-      
-      {/* Display the color pickers for each player */}
-      <View style={[styles.container, {flexDirection:'row'}]}>
-        <Text style={[styles.normal, {flex:1}]}>Player colors:</Text>
-        {PlayerColorPickerArray}
       </View>
-
-      {/* Go the the screen with the clocks*/}
-      <View style={styles.container}>
-        <Button
-          title="Let's go"
-          onPress={() =>
-            navigation.navigate('Clocks', {
-              numberOfPlayers:numberOfPlayers,
-              duration:timerDuration,
-              colors:playerColors,
-            })
-          }
-        />
+      <View style={{flexDirection:'row'}}>
+        <Text style={styles.configText}>Time per player:</Text>
+        <Picker
+          selectedValue={timerDuration}
+          style={{flex:1,color:colors[1]}}
+          dropdownIconColor={colors[1]}
+          onValueChange={(itemValue, itemIndex) => {
+            props.onChange({...props.configuration,timerDuration:itemValue})
+          }}
+          >
+          {timeItems}
+        </Picker>
+      </View>
+      <View style={{flexDirection:'row',}}>
+        <Text style={styles.configText}>Colors:</Text>
+        <View style={{flex:1,height:150,margin:10}}>
+          <View style={{flex:1,justifyContent:'space-around'}}>
+            <View style={{flex:1,flexDirection:'row',justifyContent:'space-around'}}>
+              {PlayerColorPickerArray[0]}
+              {PlayerColorPickerArray[1]}
+            </View>
+            <View style={{flex:1,flexDirection:'row',justifyContent:'space-around'}}>
+              {PlayerColorPickerArray[3]}
+              {PlayerColorPickerArray[2]}
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   )
 }
 
-export default ConfigScreen
+export default Config
 
 const styles = StyleSheet.create({
     container: {
@@ -112,4 +107,11 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color : colors[1],
     },
+    configText: {
+      flex:1,
+      textAlign:'right',
+      textAlignVertical:'center',
+      color : colors[1],
+      fontSize: 20,
+    }
 })
