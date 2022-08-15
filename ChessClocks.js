@@ -27,6 +27,7 @@ const renderTime = (time) => {
 // the main component
 // props: numberOfPlayers, duration, colors
 const ChessClocks = (props) => {
+  console.log(props)
     let n = props.numberOfPlayers
     const [Pause,setPause] = useState(true)
     const [aanDeBeurt,setAanDeBeurt] = useState(0)
