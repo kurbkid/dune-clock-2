@@ -30,15 +30,28 @@ const ChessClocks = (props) => {
     let n = props.numberOfPlayers
     const [Pause,setPause] = useState(true)
     const [aanDeBeurt,setAanDeBeurt] = useState(0)
+    const [isAlive, setIsAlive] = useState(Array(props.numberOfPlayers).fill(true))
+
+    const handlePush = (i) => {
+      if (aanDeBeurt == i) {
+        for (let j=1;j<5;j++){
+          let k = (i+j)%n
+          console.log(k)
+          console.log(isAlive)
+          if (isAlive[k]) {
+            setAanDeBeurt(k)
+            return
+          }
+        }
+      }
+    }
 
     var clocks = [];
     for (let i = 0; i<n; i++) {
       clocks.push(
       <View style={{flex:1,justifyContent:'center',transform: clockStyleRotation(i)}} key={i}>
         <TouchableOpacity
-          onPress = {() => {
-            (aanDeBeurt == i) && setAanDeBeurt( (aanDeBeurt+1) % n )
-          }}
+          onPress = {() => handlePush(i)}
           >
           <CountdownCircleTimer
             isPlaying={ !Pause && aanDeBeurt==i }
@@ -47,6 +60,11 @@ const ChessClocks = (props) => {
             //initialTimeRemaining={0.0020}
             colors={props.colors[i]}
             trailColor={pSBC(-.75,props.colors[i])}
+            onComplete={ () => {
+              let a = isAlive.slice()
+              a[i]=false
+              setIsAlive(a); 
+            }}
             >
             {({remainingTime}) => renderTime(remainingTime)}
           </CountdownCircleTimer>
